@@ -1,6 +1,6 @@
 // src/route/userRoutes.ts
 import { Router } from 'express';
-import { registerUser, getUserStats, checkEmail } from '../controller/UserController';
+import { registerUser, getUserStats, checkEmail, deleteUser } from '../controller/UserController';
 
 const router = Router();
 
@@ -11,5 +11,7 @@ router.post('/', registerUser);
 router.get('/:id/stats', getUserStats);
 
 router.get('/email/:email', checkEmail);
+
+router.delete('/delete', deleteUser);
 
 export default router;

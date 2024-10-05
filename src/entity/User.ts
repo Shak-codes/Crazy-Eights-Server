@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   id!: number; // Using '!' to tell TypeScript this will be initialized by TypeORM

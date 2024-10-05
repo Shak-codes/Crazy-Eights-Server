@@ -10,10 +10,8 @@ import routes from './route';
 const app = express();
 const PORT = 5000;
 
-// Middleware
 app.use(express.json());
 
-// API routes
 app.use('/api', routes);
 
 // HTTP server for Express and Socket.io
@@ -21,7 +19,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
   },
 });
 

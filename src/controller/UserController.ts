@@ -111,3 +111,31 @@ export const updatePlayerStats = async (req: Request, res: Response): Promise<Re
     return res.status(500).json({ message: 'Error updating game results', error });
   }
 };
+
+export const deleteUser = async (req: Request, res: Response): Promise<Response> => {
+  const userRepository = AppDataSource.getRepository(User);
+  const { id, email } = req.body;
+
+  try {
+    // Find the user by ID or email
+    let user;
+    if (id) {
+      user = await userRepository.findOne({ where: { id: Number(id) } });
+    } else if (email) {
+      user = await userRepository.findOne({ where: { email } });
+    }
+
+    // If no user is found, return an error
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete the user from the database
+    await userRepository.remove(user);
+
+    return res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return res.status(500).json({ message: 'Error deleting user', error });
+  }
+};
