@@ -3,8 +3,42 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entity/User';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-// Controller to check if an email is already registered
+dotenv.config();
+
+export const loginUser = async (req: Request, res: Response): Promise<Response> => {
+  const userRepository = AppDataSource.getRepository(User);
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const user = await userRepository.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Compare provided password with stored password hash
+    const validPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Create JWT
+    const token = jwt.sign(
+      { id: user.id, email: user.email }, // Payload data
+      process.env.JWT_SECRET!,            // Secret key from .env
+      { expiresIn: '1h' }                 // Token expiration (e.g., 1 hour)
+    );
+
+    // Send JWT as a response
+    return res.status(200).json({ token });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error logging in user', error });
+  }
+};
+
 export const checkEmail = async (req: Request, res: Response): Promise<Response> => {
   const userRepository = AppDataSource.getRepository(User);
   const email = req.params.email;
