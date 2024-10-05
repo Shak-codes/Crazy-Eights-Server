@@ -1,16 +1,14 @@
 // src/index.ts
 import 'reflect-metadata';
 import express from 'express';
-import dotenv from 'dotenv';
 import http from 'http';
 import { Server } from 'socket.io';
 import { AppDataSource } from './data-source';  // Import the new DataSource
 import routes from './route';
 
-dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 // Middleware
 app.use(express.json());

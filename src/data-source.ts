@@ -1,14 +1,16 @@
 // src/data-source.ts
+import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Game } from './entity/Game';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: process.env.DATABASE_URL, // Your database URL
-  synchronize: true,  // Set to false in production, and use migrations
-  logging: false,
-  entities: [User, Game],  // Add your entities here
-  migrations: [],
-  subscribers: [],
+  url: process.env.DATABASE_URL,
+  synchronize: false,
+  logging: true,
+  entities: [User, Game],
 });
