@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Game } from './Game';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
@@ -7,13 +6,14 @@ export class User {
   id!: number; // Using '!' to tell TypeScript this will be initialized by TypeORM
 
   @Column({ unique: true })
-  username!: string;
+  email!: string;
 
   @Column()
   passwordHash!: string;
 
-  @ManyToMany(() => Game, (game) => game.users)
-  games!: Game[];
+  // To store gameIds as an array of strings (e.g., Socket.IO room IDs)
+  @Column("text", { array: true, default: [] })
+  gameIds!: string[];
 
   // Stats fields
   @Column({ type: 'int', default: 0 })
@@ -23,11 +23,15 @@ export class User {
   gamesWon!: number;
 
   @Column({ type: 'int', default: 0 })
-  totalScore!: number;
+  gamesLost!: number;
 
-  @Column({ type: 'float', default: 0.0 })
-  averageScore!: number;
+  @Column({ type: 'int', default: 0 })
+  winStreak!: number;
+
+  @Column({ type: 'int', default: 0 })
+  highestStreak!: number;
 
   @Column({ type: 'float', default: 0.0 })
   winRate!: number;
 }
+
